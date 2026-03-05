@@ -18,6 +18,8 @@
         };
         document.addEventListener("DOMContentLoaded", () => {
             updateTexts();
+            const selector = document.getElementById('language-selector');
+            if (selector) selector.value = SettingsManager.getLanguage();
         });
     </script>
     <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -73,7 +75,7 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             onchange="switchLanguage(this.value)"
     >
-        <option value="en-EN" selected>EN</option>
+        <option value="en-EN">EN</option>
         <option value="pt-BR">PT</option>
         <option value="de-DE">DE</option>
     </select>

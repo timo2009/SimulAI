@@ -1,4 +1,3 @@
-let language = "en-EN"
 
 let content = {
     "pt-BR": {
@@ -286,16 +285,19 @@ let contentDynamic = {
     }
 };
 function getLanguageContent(text) {
-    return content[language][text]
+    return content[SettingsManager.getLanguage()][text]
 }
 
 function getDynamicText(key) {
-    return contentDynamic[language][key] || key;
+    return contentDynamic[SettingsManager.getLanguage()][key] || key;
 }
 
 function switchLanguage(lang) {
-    language = lang
-    updateTexts()
+    SettingsManager.setLanguage(lang); // speichern
+    updateTexts(); // Texte aktualisieren
+
+    const selector = document.getElementById('language-selector');
+    if (selector) selector.value = lang;
 }
 
 function updateTexts() {

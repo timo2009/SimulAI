@@ -132,6 +132,41 @@ function parseBlock(rawBlock, index) {
 
 // --- HISTÓRICO SYSTEM ---
 
+const SettingsManager = {
+    STORAGE_KEY: 'simulai_settings',
+
+    load: function() {
+        try {
+            const settings = localStorage.getItem(this.STORAGE_KEY);
+            return settings ? JSON.parse(settings) : { language: 'en-EN' }; // Standard-Sprache
+        } catch (error) {
+            return { language: 'en-EN' };
+        }
+    },
+
+    save: function(settings) {
+        try {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(settings));
+        } catch (error) {
+            console.error('ERROR', error);
+        }
+    },
+
+    getLanguage: function() {
+        console.log(this.load())
+        const settings = this.load();
+        return settings.language || 'en-EN';
+    },
+
+    setLanguage: function(lang) {
+        console.log(lang)
+        console.log(this.getLanguage())
+        const settings = this.load();
+        settings.language = lang;
+        this.save(settings);
+    }
+};
+
 const HistoryManager = {
 // Chave para localStorage
     STORAGE_KEY: 'simulai_history',
