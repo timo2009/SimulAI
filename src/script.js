@@ -270,14 +270,15 @@ function loadHistoryQuiz(id) {
     if (item) {
         quizData = item.questions;
         switchTab('create');
+        console.log("created quiz from history:");
 
-        setTimeout(() => {
-            renderQuiz();
-            Object.entries(item.userAnswers).forEach(([questionId, answer]) => {
-                const input = document.querySelector(`input[name="q-${questionId}"][value="${answer}"]`);
-                if (input) input.checked = true;
-            });
-        }, 100);
+        document.addEventListener('DOMContentLoaded', () => {
+            HistoryManager.updateHistoryCount();
+            const history = HistoryManager.load();
+            if (history.length > 0) {
+                loadHistoryQuiz(history[0].id);
+            }
+        });
     }
 }
 
@@ -378,7 +379,6 @@ document.getElementById('btn-generate').addEventListener('click', () => {
 });
 
 function renderQuiz() {
-// Limpar container primeiro
     ui.container.innerHTML = '';
 
     ui.container.innerHTML = quizData.map((q, idx) => `
