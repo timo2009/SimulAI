@@ -63,11 +63,7 @@ function parseBlock(rawBlock, index) {
     let block = rawBlock.trim();
     if (block.length < 10) return null;
 
-    // --- FASE 1: ISOLAMENTO (A Chave da Solução) ---
-    // Dividimos o texto em duas partes: "Problema" (Enunciado+Opções) e "Solução" (Gabarito+Justificativa)
-    // Isso impede que "A)" dentro da justificativa seja lido como opção.
 
-    // Procura onde começa a resposta ou justificativa
     const splitRegex = getLanguageContent("splitPatterns");
     const splitMatch = block.match(splitRegex);
 
@@ -79,11 +75,9 @@ function parseBlock(rawBlock, index) {
         solutionPart = block.substring(splitMatch.index).trim();
     }
 
-    // --- FASE 2: EXTRAÇÃO DO PROBLEMA ---
     let questionText = "";
     let options = [];
 
-    // Regex para encontrar opções (A), a., (A)) APENAS na parte do problema
     const optionRegex = getLanguageContent("optionRegex");
     let match;
     let optionsStartIndex = problemPart.length;
@@ -96,26 +90,19 @@ function parseBlock(rawBlock, index) {
         });
     }
 
-// O que vem antes das opções é o Enunciado
     questionText = problemPart.substring(0, optionsStartIndex).trim();
-// Limpa prefixos comuns
     questionText = questionText.replace(getLanguageContent("questionRegex"), '');
-    questionText = questionText.replace(/^\**\s*/, ''); // Remove asteriscos soltos no inicio
+    questionText = questionText.replace(/^\**\s*/, '');
 
-// --- FASE 3: EXTRAÇÃO DA SOLUÇÃO ---
     let correctAnswer = "";
     let justification = "";
 
-// Extrair Letra Correta (Procura na solutionPart)
-// Aceita formatos sujos como "✅ **Letra Correta: A**"
     const answerMatch = solutionPart.match(getLanguageContent("answerRegex"));
     if (answerMatch) correctAnswer = answerMatch[1].toLowerCase();
 
-// Extrair Justificativa (Procura na solutionPart)
     const justMatch = solutionPart.match(getLanguageContent("justificationRegex"));
     if (justMatch) {
         justification = justMatch[1].trim();
-// Remove formatação markdown básica da justificativa
         justification = justification.replace(/\*\*/g, '');
     }
 
@@ -130,7 +117,7 @@ function parseBlock(rawBlock, index) {
     };
 }
 
-// --- HISTÓRICO SYSTEM ---
+// --- History SYSTEM ---
 
 const SettingsManager = {
     STORAGE_KEY: 'simulai_settings',
@@ -138,7 +125,7 @@ const SettingsManager = {
     load: function() {
         try {
             const settings = localStorage.getItem(this.STORAGE_KEY);
-            return settings ? JSON.parse(settings) : { language: 'en-EN' }; // Standard-Sprache
+            return settings ? JSON.parse(settings) : { language: 'en-EN' };
         } catch (error) {
             return { language: 'en-EN' };
         }
@@ -153,14 +140,11 @@ const SettingsManager = {
     },
 
     getLanguage: function() {
-        console.log(this.load())
         const settings = this.load();
         return settings.language || 'en-EN';
     },
 
     setLanguage: function(lang) {
-        console.log(lang)
-        console.log(this.getLanguage())
         const settings = this.load();
         settings.language = lang;
         this.save(settings);
@@ -168,16 +152,14 @@ const SettingsManager = {
 };
 
 const HistoryManager = {
-// Chave para localStorage
     STORAGE_KEY: 'simulai_history',
 
-// Carregar histórico do localStorage
     load: function () {
         try {
             const history = localStorage.getItem(this.STORAGE_KEY);
             return history ? JSON.parse(history) : [];
         } catch (error) {
-            console.error('Erro ao carregar histórico:', error);
+            console.error('Erron: ', error);
             return [];
         }
     },
@@ -225,7 +207,6 @@ const HistoryManager = {
         this.updateHistoryCount();
     },
 
-// Exportar histórico para arquivo JSON
     export: function () {
         const history = this.load();
         const dataStr = JSON.stringify(history, null, 2);
@@ -240,13 +221,12 @@ const HistoryManager = {
     extractTheme: function (rawInput) {
         const lines = rawInput.split('\n').slice(0, 5);
         for (let line of lines) {
-            // Statt 'questão' => dynamisch
             if (line.toLowerCase().includes(getDynamicText('quiz_question_identifier').toLowerCase())) {
                 const match = line.match(/\[[^\]]+\]/);
                 if (match) return match[0].replace(/[\[\]]/g, '');
             }
         }
-        return getDynamicText('history_theme_unknown'); // Kein hartcodierter Default mehr
+        return getDynamicText('history_theme_unknown');
     },
 
     updateHistoryCount: function () {
@@ -254,7 +234,6 @@ const HistoryManager = {
         document.getElementById('history-count').textContent = history.length;
     },
 
-// Carregar e exibir histórico
     render: function () {
         const history = this.load();
         const container = document.getElementById('history-container');
@@ -305,7 +284,6 @@ function loadHistoryQuiz(id) {
     if (item) {
         quizData = item.questions;
         switchTab('create');
-        console.log("created quiz from history:");
 
         document.addEventListener('DOMContentLoaded', () => {
             HistoryManager.updateHistoryCount();
@@ -345,7 +323,6 @@ ${q.justification ? `${getDynamicText('history_explanation')}: ${q.justification
     }
 }
 
-// --- UI ---
 
 const ui = {
     input: document.getElementById('ai-input'),
@@ -363,7 +340,6 @@ const ui = {
 let quizData = [];
 let userAnswers = {};
 
-// Trocar entre abas
 function switchTab(tab) {
     document.querySelectorAll('[id^="tab-"]').forEach(btn => {
         btn.classList.remove('tab-active');

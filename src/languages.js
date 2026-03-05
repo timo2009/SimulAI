@@ -1,3 +1,37 @@
+/*
+    CHANGES IN THIS PULL REQUEST:
+
+    Author: timo2009
+
+
+    1. Multilanguage Support Enhanced:
+       - Added and fully integrated Portuguese (pt-BR), English (en-EN), and German (de-DE) translations.
+       - Dynamic texts (alerts, logs, quiz feedback, history labels) now use `contentDynamic` and `getDynamicText` for consistent localization.
+       - Regex patterns for parsing questions, answers, and justifications now adapt per selected language.
+
+    2. Parsing & Normalization Improvements:
+       - `normalizeText()` updated to handle language-specific question patterns and block splitting.
+       - `parseBlock()` fully supports language-dependent option regex, answer regex, and justification regex.
+       - Ensures correct extraction of question text, options, answers, and justifications for multiple languages.
+
+    3. UI & HTML Updates:
+       - All static labels, buttons, and placeholders are now dynamically updated according to selected language via `updateTexts()`.
+       - Added language selector dropdown for switching languages on the fly.
+       - Improved HTML structure for quizzes, history, and input tabs to support multilingual content and responsive UI.
+       - Added fade-in animations, improved Tailwind styling, and better visual feedback for quiz answers.
+
+    4. History System Updates:
+       - HistoryManager now stores multilingual-friendly metadata and displays dynamic labels.
+       - Buttons for repeating simulations, viewing details, and deleting history items are fully localized.
+       - Score display, explanations, and quiz feedback adapt to the selected language.
+
+    5. Minor Refactors:
+       - Consolidated repeated code in `parseBlock()` for cleaner logic.
+       - Streamlined `switchTab()`, `renderQuiz()`, and history rendering to support multiple languages.
+       - Log messages (console) are now dynamic per language for easier debugging and monitoring.
+
+    Overall, this update ensures a complete multilingual experience, improves parsing reliability, and refactors the code for better maintainability and scalability.
+*/
 
 let content = {
     "pt-BR": {
