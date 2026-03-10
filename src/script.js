@@ -171,8 +171,8 @@ const HistoryManager = {
         const simulado = {
             id: Date.now().toString(36) + Math.random().toString(36).substr(2),
             timestamp: new Date().toISOString(),
-            date: new Date().toLocaleDateString('pt-BR'),
-            time: new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}),
+            date: new Date().toLocaleDateString(SettingsManager.getLanguage()),
+            time: new Date().toLocaleTimeString(SettingsManager.getLanguage(), {hour: '2-digit', minute: '2-digit'}),
             score: score,
             totalQuestions: quizData.length,
             percentage: Math.round((score / quizData.length) * 100),
@@ -252,7 +252,7 @@ const HistoryManager = {
         <div class="flex justify-between items-start mb-3">
             <div>
                 <h3 class="font-bold text-slate-800">${item.theme}</h3>
-                <p class="text-sm text-slate-500">${item.date} às ${item.time}</p>
+                <p class="text-sm text-slate-500">${item.date} ${getDynamicText('history_at')} ${item.time}</p>
             </div>
             <div class="flex items-center space-x-2">
                 <div class="text-right">
@@ -282,16 +282,10 @@ function loadHistoryQuiz(id) {
     const item = history.find(h => h.id === id);
 
     if (item) {
-        quizData = item.questions;
         switchTab('create');
-
-        document.addEventListener('DOMContentLoaded', () => {
-            HistoryManager.updateHistoryCount();
-            const history = HistoryManager.load();
-            if (history.length > 0) {
-                loadHistoryQuiz(history[0].id);
-            }
-        });
+        quizData = item.questions;
+        userAnswers = {};
+        renderQuiz();
     }
 }
 
@@ -416,7 +410,7 @@ function renderQuiz() {
         <p class="status-msg font-bold text-lg mb-1"></p>
         <div class="text-slate-700 text-sm leading-relaxed">
             <strong class="text-slate-900">${getDynamicText('quiz_explanation')}:</strong><br>
-            ${q.justification || "Sem justificativa disponível."}
+            ${q.justification || getDynamicText('quiz_no_explanation')}
         </div>
     </div>
 </div>
@@ -487,7 +481,7 @@ document.getElementById('btn-check').addEventListener('click', () => {
     ui.score.innerHTML = `
 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">${getDynamicText('history_score_label')}</p>
 <div class="text-5xl font-black text-blue-600 my-3">${pct}%</div>
-<p class="text-slate-700">Você acertou <strong>${score}</strong> de <strong>${quizData.length}</strong> questões.</p>
+<p class="text-slate-700">${getDynamicText('quiz_score_sentence').replace('{score}', score).replace('{total}', quizData.length)}</p>
 <div class="mt-4 text-sm text-slate-500">
     ${getDynamicText('quiz_save_hint')}
 </div>

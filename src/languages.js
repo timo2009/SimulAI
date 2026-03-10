@@ -248,6 +248,7 @@ let contentDynamic = {
         history_user_answer: "Suas opções",
         history_correct_answer: "Gabarito",
         quiz_no_explanation: "Sem justificativa disponível.",
+        quiz_score_sentence: "Você acertou {score} de {total} questões.",
 
     },
     "en-EN": {
@@ -282,6 +283,7 @@ let contentDynamic = {
         history_user_answer: "Your answers",
         history_correct_answer: "Correct answer",
         quiz_no_explanation: "No explanation available.",
+        quiz_score_sentence: "You got {score} out of {total} questions correct.",
     },
     "de-DE": {
         history_repeat: "🔄 Wiederholen",
@@ -315,6 +317,7 @@ let contentDynamic = {
         history_user_answer: "Ihre Antworten",
         history_correct_answer: "Richtige Antwort",
         quiz_no_explanation: "Keine Begründung verfügbar.",
+        quiz_score_sentence: "Sie haben {score} von {total} Fragen richtig beantwortet.",
 
     }
 };
